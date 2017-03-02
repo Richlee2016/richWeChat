@@ -46,7 +46,6 @@ Wechat.prototype.isValidAccessToken = function(data){
         return false;
     };
 };
-
 Wechat.prototype.updateAccessToken = function(data){
     var appID = this.appID;
     var appSecret = this.appSecret;
@@ -64,5 +63,15 @@ Wechat.prototype.updateAccessToken = function(data){
     });
 };
 
+Wechat.prototype.reply = function(){
+    //console.log(this.body);
+    //var content = this.body;
+    //console.log(content);
+    //var message = this.weixinMsg;
+    //var xml = util.tpl(content,message);
+    //this.status = 200;
+    //this.type = 'application/xml';
+    //this.body=xml;
+};
 
 module .exports= Wechat;

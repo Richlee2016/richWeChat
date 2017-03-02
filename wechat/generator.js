@@ -3,6 +3,7 @@ var sha1 = require('sha1');
 //解析 url 中xml 内容
 var getRawBody = require('raw-body');
 var Wechat = require('./wechat');
+var weixin = require('../weixin');
 var util = require('./util');
 module.exports = function (opts){
     var that = this;
@@ -36,23 +37,12 @@ module.exports = function (opts){
 
             //解析xml (xml2js)
             var content = yield util.parseXMLAsync(data);
-            //回复
+            //最终得到得 Json
             var message = util.formatMessage(content.xml);
-            console.log(message);
-            if(message.MsgType === 'event'){
-                if(message.Event === 'subscribe'){
-                    var now = new Date().getTime();
-                    this.status = 200;
-                    this.type = 'application/xml';
-                    this.body=`<xml><ToUserName><![CDATA[${message.FromUserName}]]></ToUserName>
-                    <FromUserName><![CDATA[${message.ToUserName}]]></FromUserName>
-                    <CreateTime>${now}</CreateTime>
-                    <MsgType><![CDATA[text]]></MsgType>
-                    <Content><![CDATA[欢迎来到Rich的小屋]]></Content>
-                    </xml>`
-                    return;
-                };
-            };
+            this.weixinMsg = message;
+
+            //yield handle.call(this,next);
+            //Wechat.reply.call(this);
         };
     };
 }
