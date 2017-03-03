@@ -5,8 +5,8 @@ var getRawBody = require('raw-body');
 var Wechat = require('./wechat');
 var weixin = require('../weixin');
 var util = require('./util');
-module.exports = function (opts){
-    var that = this;
+module.exports = function (opts,handle){
+    var wechat = new Wechat(opts);
     return function *(next){
         this.set('Cache-Control','no-cache');
         var token = opts.token;
@@ -40,9 +40,10 @@ module.exports = function (opts){
             //最终得到得 Json
             var message = util.formatMessage(content.xml);
             this.weixinMsg = message;
-
-            //yield handle.call(this,next);
-            //Wechat.reply.call(this);
+            //处理获取字段 并返回 回复数据
+            yield handle.call(this,next);
+            //返回 字符模板 进行回复
+            wechat.reply.call(this);
         };
     };
 }

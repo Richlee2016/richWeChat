@@ -1,4 +1,7 @@
 "use strict"
+var path = require('path');
+var util = require('./libs/util');
+var wechat_file = path.join(__dirname, './config/wechat.txt');
 //΢配置config
 var config = {
     wechat: {

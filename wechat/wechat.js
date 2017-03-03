@@ -62,16 +62,13 @@ Wechat.prototype.updateAccessToken = function(data){
         });
     });
 };
-
+//回复
 Wechat.prototype.reply = function(){
-    //console.log(this.body);
-    //var content = this.body;
-    //console.log(content);
-    //var message = this.weixinMsg;
-    //var xml = util.tpl(content,message);
-    //this.status = 200;
-    //this.type = 'application/xml';
-    //this.body=xml;
+    var content = this.body;
+    var message = this.weixinMsg;
+    var xml = util.tpl(content,message);
+    this.status = 200;
+    this.type = 'application/xml';
+    this.body=xml;
 };
-
 module .exports= Wechat;

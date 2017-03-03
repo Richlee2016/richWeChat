@@ -7,23 +7,23 @@ var tpl = heredoc(function (){/*
          <FromUserName><![CDATA[<%= fromUserName %>]]></FromUserName>
          <CreateTime><%= createTime %></CreateTime>
          <MsgType><![CDATA[<%= msgType %>]]></MsgType>
-         <% if(message.MsgType === 'text'){ %>
+         <% if(msgType === 'text'){ %>
             <Content><![CDATA[<%= content %>]]></Content>
-         <% }else if(message.MsgType === 'image'){ %>
+         <% }else if(msgType === 'image'){ %>
              <Image>
                 <MediaId><![CDATA[<%= mediaId %>]]></MediaId>
              </Image>
-         <% }else if(message.MsgType === 'voice'){ %>
+         <% }else if(msgType === 'voice'){ %>
              <Voice>
                 <MediaId><![CDATA[<%= mediaId %>]]></MediaId>
              </Voice>
-         <% }else if(message.MsgType === 'video'){ %>
+         <% }else if(msgType === 'video'){ %>
              <Video>
                  <MediaId><![CDATA[<%= mediaId %>]]></MediaId>
                  <Title><![CDATA[<%= title %>]]></Title>
                  <Description><![<%= description %>]]></Description>
              </Video>
-         <% }else if(message.MsgType === 'music'){ %>
+         <% }else if(msgType === 'music'){ %>
              <Music>
                  <Title><![CDATA[<%= title %>]]></Title>
                  <Description><![<%= description %>]]></Description>
@@ -31,10 +31,10 @@ var tpl = heredoc(function (){/*
                  <HQMusicUrl><![<%= hqMusicUrl %>]]></HQMusicUrl>
                  <ThumbMediaId><![<%= thumbMediaId %>]]></ThumbMediaId>
              </Music>
-         <% }else if(message.MsgType === 'news'){ %>
-             <ArticleCount><%= articleCount.length %></ArticleCount>
+         <% }else if(msgType === 'news'){ %>
+             <ArticleCount><%= content.length %></ArticleCount>
              <Articles>
-                 <% articleCount.forEach(function(item){ %>
+                 <% content.forEach(function(item){ %>
                  <item>
                      <Title><![CDATA[<%= item.title %>]]></Title>
                      <Description><![CDATA[<%= item.description %>]]></Description>

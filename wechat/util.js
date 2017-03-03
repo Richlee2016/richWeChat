@@ -46,13 +46,20 @@ function formatMessage(result){
 };
 exports.formatMessage = formatMessage;
 
+//模板解析回复xml
 exports.tpl = function(content, message){
     var info = {};
     var type = 'text';
     var fromUserName = message.FromUserName;
     var toUserName = message.ToUserName;
-
     if(Array.isArray(content)){
         type = 'news';
     };
+    type = content.type || type;
+    info.content = content;
+    info.msgType = type;
+    info.createTime = new Date().getTime();
+    info.toUserName = fromUserName;
+    info.fromUserName = toUserName;
+    return tpl.compiled(info);
 };
