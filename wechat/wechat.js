@@ -4,7 +4,11 @@ var request = Promise.promisify(require('request'));
 var util = require('./util');
 var prefix = 'https://api.weixin.qq.com/cgi-bin/';
 var api = {
-    accessToken: prefix + 'token?grant_type=client_credential'
+    accessToken: prefix + 'token?grant_type=client_credential',
+    upload:{
+        temporary:prefix + '/media/upload?access_token=ACCESS_TOKEN&type=TYPE'
+    }
+
 }
 var Wechat =function(opts){
             var that = this;
@@ -32,6 +36,7 @@ var Wechat =function(opts){
                     that.saveAccessToken(data);
                 });
         };
+//验证票据是否过期
 Wechat.prototype.isValidAccessToken = function(data){
     if(!data || !data.access_token || !data.expires_in){
         return false;
@@ -46,6 +51,7 @@ Wechat.prototype.isValidAccessToken = function(data){
         return false;
     };
 };
+//更新票据
 Wechat.prototype.updateAccessToken = function(data){
     var appID = this.appID;
     var appSecret = this.appSecret;
@@ -62,7 +68,24 @@ Wechat.prototype.updateAccessToken = function(data){
         });
     });
 };
-//回复
+//获取已经更新的票据
+Wechat.prototype.haveAccessToken = function(data){
+   return new Promise(function(resolve, reject){
+        if(err){
+            reject(err);
+        }else{
+            resolve(data);
+        };
+    });
+};
+
+//上传
+Wechat.prototype.uploadSource = function(){
+
+
+};
+
+//微信回复
 Wechat.prototype.reply = function(){
     var content = this.body;
     var message = this.weixinMsg;
