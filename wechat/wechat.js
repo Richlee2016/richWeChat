@@ -1,12 +1,13 @@
 "use strict"
 var Promise = require('bluebird');
+var fs = require('fs');
 var request = Promise.promisify(require('request'));
 var util = require('./util');
 var prefix = 'https://api.weixin.qq.com/cgi-bin/';
 var api = {
     accessToken: prefix + 'token?grant_type=client_credential',
     upload:{
-        temporary:prefix + '/media/upload?access_token=ACCESS_TOKEN&type=TYPE'
+        temporary:prefix + 'media/upload?'
     }
 
 }
@@ -16,25 +17,7 @@ var Wechat =function(opts){
             this.appSecret= opts.appSecret;
             this.getAccessToken= opts.getAccessToken;
             this.saveAccessToken = opts.saveAccessToken;
-            this.getAccessToken()
-                .then(function(data){
-                    try {
-                        data = JSON.parse(data)
-                    }
-                    catch(e){
-                        return that.updateAccessToken()
-                    }
-                    if (that.isValidAccessToken(data)){
-                        return Promise.resolve(data);
-                    }else{
-                        return that.updateAccessToken()
-                    }
-                })
-                .then(function(data){
-                    that.access_token = data.access_token;
-                    that.expires_in = data.expires_in;
-                    that.saveAccessToken(data);
-                });
+            this.haveAccessToken();
         };
 //验证票据是否过期
 Wechat.prototype.isValidAccessToken = function(data){
@@ -68,21 +51,62 @@ Wechat.prototype.updateAccessToken = function(data){
         });
     });
 };
-//获取已经更新的票据
-Wechat.prototype.haveAccessToken = function(data){
-   return new Promise(function(resolve, reject){
-        if(err){
-            reject(err);
-        }else{
-            resolve(data);
+//获取accessToken并保存
+Wechat.prototype.haveAccessToken = function(){
+    var that = this;
+    if(this.access_token && this.expires_in){
+        if(this.isValidAccessToken(this)){
+            return Promise.resolve(this);
         };
-    });
+    };
+    return that.getAccessToken()
+            .then(function(data){
+                try {
+                    data = JSON.parse(data)
+                }
+                catch(e){
+                    return that.updateAccessToken()
+                }
+                if (that.isValidAccessToken(data)){
+                    return Promise.resolve(data);
+                }else{
+                    return that.updateAccessToken()
+                }
+            })
+            .then(function(data){
+                that.access_token = data.access_token;
+                that.expires_in = data.expires_in;
+                that.saveAccessToken(data);
+                return Promise.resolve(data);
+            });
+
 };
 
 //上传
-Wechat.prototype.uploadSource = function(){
-
-
+Wechat.prototype.uploadSource = function(type, filepath){
+    var that = this;
+    var url = api.upload.temporary;
+    var type = type;
+    var form = {
+        media:fs.createReadStream(filepath)
+    }
+    return new Promise(function(resolve, reject){
+        that.haveAccessToken()
+        .then(function(data){
+                var urlPost =`${url}access_token=${data.access_token}&type=${type}`
+                request({method:'POST', url:urlPost, formData: form, json:true}).then(function(response){
+                    var _data = response.body;
+                    if(_data){
+                        resolve(_data);
+                    }else{
+                        throw new Error('Unload fails');
+                    };
+                })
+                .catch(function(err){
+                        reject(err)
+                });
+        })
+    });
 };
 
 //微信回复

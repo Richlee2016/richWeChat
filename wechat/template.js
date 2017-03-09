@@ -29,7 +29,7 @@ var tpl = heredoc(function (){/*
                  <Description><![<%= description %>]]></Description>
                  <MusicUrl><![<%= musicUrl %>]]></MusicUrl>
                  <HQMusicUrl><![<%= hqMusicUrl %>]]></HQMusicUrl>
-                 <ThumbMediaId><![<%= thumbMediaId %>]]></ThumbMediaId>
+                 <ThumbMediaId><![<%= mediaId %>]]></ThumbMediaId>
              </Music>
          <% }else if(msgType === 'news'){ %>
              <ArticleCount><%= content.length %></ArticleCount>

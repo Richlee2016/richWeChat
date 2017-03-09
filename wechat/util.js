@@ -61,5 +61,10 @@ exports.tpl = function(content, message){
     info.createTime = new Date().getTime();
     info.toUserName = fromUserName;
     info.fromUserName = toUserName;
+    info.mediaId = content.mediaId;
+    info.musicUrl = content.musicUrl;
+    info.title = content.title;
+    info.description = content.description;
+    info.hqMusicUrl = content.hqMusicUrl || "";
     return tpl.compiled(info);
 };
