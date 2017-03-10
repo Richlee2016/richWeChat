@@ -59,7 +59,6 @@ exports.reply = function *(next){
                 title:'别说话，看我',
                 description:'就是这么任性'
             }
-            console.log(data);
         }else if(content === '8'){
             var data = yield wechatApi.uploadSource('image', __dirname + '/static/2.png');
              reply= {
@@ -67,7 +66,7 @@ exports.reply = function *(next){
                 description: '这是一首歌',
                 title:'好听的歌',
                 musicUrl:'http://music.163.com/#/m/song?id=28557036&userid=115884605',
-                 mediaId:data.media_id
+                mediaId:data.media_id
             }
         };
         this.body = reply;
